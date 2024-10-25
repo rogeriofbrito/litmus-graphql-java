@@ -34,6 +34,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.18.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.graphql-java-kickstart</groupId>
+			<artifactId>graphql-webclient-spring-boot-starter</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.netflix.graphql.dgs.codegen</groupId>
+			<artifactId>graphql-dgs-codegen-client-core</artifactId>
+			<version>5.1.17</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -48,6 +63,55 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>io.github.deweyjose</groupId>
+				<artifactId>graphqlcodegen-maven-plugin</artifactId>
+				<version>1.61.1</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<schemaPaths>
+						<param>src/main/resources/graphqls/chaos_experiment.graphqls</param>
+						<param>src/main/resources/graphqls/chaos_experiment_run.graphqls</param>
+						<param>src/main/resources/graphqls/chaos_infrastructure.graphqls</param>
+						<param>src/main/resources/graphqls/chaoshub.graphqls</param>
+						<param>src/main/resources/graphqls/common.graphqls</param>
+						<param>src/main/resources/graphqls/environment.graphqls</param>
+						<param>src/main/resources/graphqls/gitops.graphqls</param>
+						<param>src/main/resources/graphqls/image_registry.graphqls</param>
+						<param>src/main/resources/graphqls/probe.graphqls</param>
+						<param>src/main/resources/graphqls/project.graphqls</param>
+					</schemaPaths>
+					<packageName>${project.groupId}.graphqlmusicstoremaven.generated</packageName>
+					<generateClientApiV2>true</generateClientApiV2>
+					<!--generateClientApi>true</generateClientApi-->
+					<generateInterfaces>true</generateInterfaces>
+				</configuration>
+			</plugin>
+			<!--plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>3.2.0</version>
+				<executions>
+					<execution>
+						<id>add-source</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>generated-sources</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin-->
 		</plugins>
 	</build>
 
