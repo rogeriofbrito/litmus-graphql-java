@@ -10,9 +10,21 @@ import java.util.Map;
 public class GraphQLQueryRequestDecorator {
 
     private final GraphQLQueryRequest graphQLQueryRequest;
+    private final Map<String, String> variablesNames;
+    private final Map<String, String> variablesTypes;
 
     public GraphQLQueryRequestDecorator(GraphQLQueryRequest graphQLQueryRequest) {
         this.graphQLQueryRequest = graphQLQueryRequest;
+        this.variablesNames = null;
+        this.variablesTypes = null;
+    }
+
+    public GraphQLQueryRequestDecorator(GraphQLQueryRequest graphQLQueryRequest,
+                                        Map<String, String> variablesNames,
+                                        Map<String, String> variablesTypes) {
+        this.graphQLQueryRequest = graphQLQueryRequest;
+        this.variablesNames = variablesNames;
+        this.variablesTypes = variablesTypes;
     }
 
     public String serialize() {
@@ -46,8 +58,23 @@ public class GraphQLQueryRequestDecorator {
             builder.append(" ").append(query.getName());
         }
 
-        builder.append(" {").append(query.getOperationName());
         Map<String, ?> input = query.getInput();
+
+        if (variablesNames != null && variablesTypes != null) {
+            builder.append(" ").append(query.getOperationName()).append("(");
+            Iterator<?> inputEntryIterator = input.entrySet().iterator();
+            while(inputEntryIterator.hasNext()) {
+                Map.Entry<?, ?> entry = (Map.Entry<?, ?>)inputEntryIterator.next();
+                String key = (String)entry.getKey();
+                builder.append(variablesNames.get(key)).append(": ").append(variablesTypes.get(key));
+                if (inputEntryIterator.hasNext()) {
+                    builder.append(", ");
+                }
+            }
+            builder.append(")");
+        }
+
+        builder.append(" {").append(query.getOperationName());
         if (!input.isEmpty()) {
             builder.append("(");
             Iterator<?> inputEntryIterator = input.entrySet().iterator();
@@ -58,7 +85,11 @@ public class GraphQLQueryRequestDecorator {
                 Object value = entry.getValue();
                 builder.append(key);
                 builder.append(": ");
-                builder.append(inputValueSerializer.serialize(value));
+                if (variablesNames != null && variablesTypes != null) {
+                    builder.append(variablesNames.get(key));
+                } else {
+                    builder.append(inputValueSerializer.serialize(value));
+                }
                 if (inputEntryIterator.hasNext()) {
                     builder.append(", ");
                 }

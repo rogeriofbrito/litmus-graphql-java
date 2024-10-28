@@ -35,14 +35,27 @@ public class MyGraphQL {
                 .build();
         var root = new ListExperimentProjectionRoot<>().totalNoOfExperiments();
         var experimentsProj = root.experiments().experimentID().createdAt().description();
+        Map<String, String> variablesNames = Map.of("projectID", "$projectID", "request", "$request");
+        Map<String, String> variablesTypes = Map.of("projectID", "ID!", "request", "ListExperimentRequest!");
 
         GraphQLQueryRequest graphQLQueryRequest = new GraphQLQueryRequest(listExperimentGraphQLQuery, experimentsProj);
-        GraphQLQueryRequestDecorator graphQLQueryRequestDecorator = new GraphQLQueryRequestDecorator(graphQLQueryRequest);
+        GraphQLQueryRequestDecorator graphQLQueryRequestDecorator = new GraphQLQueryRequestDecorator(graphQLQueryRequest, variablesNames, variablesTypes);
 
         GraphQLRequest graphQLRequest = GraphQLRequest.builder()
                 .operationName(listExperimentGraphQLQuery.getOperationName())
                 .query(graphQLQueryRequestDecorator.serialize())
-                .variables(Map.of("userId", "test"))
+                .variables(Map.of(
+                        "projectID",
+                        "ac3598af-0c62-4ad5-a323-848cafaaa881",
+                        "request",
+                        ListExperimentRequest
+                        .newBuilder()
+                        .pagination(Pagination
+                                .newBuilder()
+                                .page(0)
+                                .limit(7)
+                                .build())
+                        .build()))
                 .build();
 
         System.out.println(new ObjectMapper().writeValueAsString(graphQLRequest.getRequestBody()));
