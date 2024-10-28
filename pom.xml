@@ -90,8 +90,9 @@
 					<packageName>${project.groupId}.graphqlmusicstoremaven.generated</packageName>
 					<generateClientApiV2>true</generateClientApiV2>
 					<!--generateClientApi>true</generateClientApi-->
-					<generateInterfaces>true</generateInterfaces>
+					<generateInterfaces>false</generateInterfaces>
 					<generateCustomAnnotations>true</generateCustomAnnotations>
+					<javaGenerateAllConstructor>true</javaGenerateAllConstructor>
 				</configuration>
 			</plugin>
 			<!--plugin>
