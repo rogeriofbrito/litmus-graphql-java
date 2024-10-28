@@ -37,10 +37,11 @@ public class MyGraphQL {
         var experimentsProj = root.experiments().experimentID().createdAt().description();
 
         GraphQLQueryRequest graphQLQueryRequest = new GraphQLQueryRequest(listExperimentGraphQLQuery, experimentsProj);
+        GraphQLQueryRequestDecorator graphQLQueryRequestDecorator = new GraphQLQueryRequestDecorator(graphQLQueryRequest);
 
         GraphQLRequest graphQLRequest = GraphQLRequest.builder()
                 .operationName(listExperimentGraphQLQuery.getOperationName())
-                .query(graphQLQueryRequest.serialize())
+                .query(graphQLQueryRequestDecorator.serialize())
                 .variables(Map.of("userId", "test"))
                 .build();
 
