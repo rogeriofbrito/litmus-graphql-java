@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: litmus-graphql-java
+
+litmus:
+  username: ${LITMUS_USERNAME}
+  password: ${LITMUS_PASSWORD}
+  graphqlApiUrl: http://localhost:8185/api/query
+  authorizationApiUrl: http://localhost:8185/auth

@@ -12,15 +12,19 @@ import com.rogeriofbrito.graphqlmusicstoremaven.generated.types.ListExperimentRe
 import com.rogeriofbrito.graphqlmusicstoremaven.generated.types.ListExperimentResponse;
 import com.rogeriofbrito.graphqlmusicstoremaven.generated.types.Pagination;
 import com.rogeriofbrito.litmusgraphqljava.GraphQLQueryRequestDecorator;
+import com.rogeriofbrito.litmusgraphqljava.config.LitmusConfig;
+import com.rogeriofbrito.litmusgraphqljava.tokenstore.TokenStore;
 import graphql.kickstart.spring.webclient.boot.GraphQLRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
+@Component
 public class ListExperimentClient {
 
     private static final BaseProjectionNode FULL_PROJECTION = new ListExperimentProjectionRoot<>()
@@ -110,17 +114,20 @@ public class ListExperimentClient {
             "projectID", "ID!",
             "request", "ListExperimentRequest!");
 
+    private final LitmusConfig litmusConfig;
     private final RestTemplate restTemplate;
-    private final String litmusGraphQLAPIUrl;
     private final ObjectMapper objectMapper;
+    private final TokenStore tokenStore;
 
-    public ListExperimentClient(RestTemplate restTemplate, String litmusGraphQLAPIUrl, ObjectMapper objectMapper) {
+    public ListExperimentClient(LitmusConfig litmusConfig, RestTemplate restTemplate, ObjectMapper objectMapper,
+                                TokenStore tokenStore) {
+        this.litmusConfig = litmusConfig;
         this.restTemplate = restTemplate;
-        this.litmusGraphQLAPIUrl = litmusGraphQLAPIUrl;
         this.objectMapper = objectMapper;
+        this.tokenStore = tokenStore;
     }
 
-    public ListExperimentResponse GetAllExperiments(String token, String projectID, Integer page, Integer limit) {
+    public ListExperimentResponse GetAllExperiments(String projectID, Integer page, Integer limit) {
         Map<String, ?> variables = Map.of(
                 "projectID", projectID,
                 "request", ListExperimentRequest
@@ -148,9 +155,9 @@ public class ListExperimentClient {
                 .build();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("authorization", "Bearer ".concat(token));
+        headers.set("authorization", "Bearer ".concat(tokenStore.getLoginResponse().getAccessToken()));
         HttpEntity<?> request = new HttpEntity<>(graphQLRequest.getRequestBody(), headers);
-        ResponseEntity<JsonNode> response = restTemplate.exchange(litmusGraphQLAPIUrl, HttpMethod.POST, request, JsonNode.class);
+        ResponseEntity<JsonNode> response = restTemplate.exchange(litmusConfig.getGraphqlApiUrl(), HttpMethod.POST, request, JsonNode.class);
 
         if (response.getStatusCode().isError()) {
             throw new RuntimeException("status code exception"); // TODO: create business exception
