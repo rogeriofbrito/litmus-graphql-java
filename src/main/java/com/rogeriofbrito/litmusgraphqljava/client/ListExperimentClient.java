@@ -17,7 +17,6 @@ import com.rogeriofbrito.litmusgraphqljava.tokenstore.TokenStore;
 import graphql.kickstart.spring.webclient.boot.GraphQLRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -157,7 +156,8 @@ public class ListExperimentClient {
         HttpHeaders headers = new HttpHeaders();
         headers.set("authorization", "Bearer ".concat(tokenStore.getLoginResponse().getAccessToken()));
         HttpEntity<?> request = new HttpEntity<>(graphQLRequest.getRequestBody(), headers);
-        ResponseEntity<JsonNode> response = restTemplate.exchange(litmusConfig.getGraphqlApiUrl(), HttpMethod.POST, request, JsonNode.class);
+        ResponseEntity<JsonNode> response = restTemplate
+                .postForEntity(litmusConfig.getGraphqlApiUrl(), request, JsonNode.class);
 
         if (response.getStatusCode().isError()) {
             throw new RuntimeException("status code exception"); // TODO: create business exception
