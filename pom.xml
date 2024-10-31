@@ -94,7 +94,7 @@
 					<javaGenerateAllConstructor>true</javaGenerateAllConstructor>
 				</configuration>
 			</plugin>
-			<!--plugin>
+			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<version>3.2.0</version>
@@ -107,12 +107,12 @@
 						</goals>
 						<configuration>
 							<sources>
-								<source>generated-sources</source>
+								<source>${project.build.directory}/generated-sources</source>
 							</sources>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin-->
+			</plugin>
 		</plugins>
 	</build>
 

@@ -43,7 +43,7 @@ public class TokenStore {
             this.loginResponse = authorizationClient.login(loginRequest);
             this.updatedAt = System.currentTimeMillis();
         } catch (Exception e) {
-            throw new RuntimeException(); // TODO: create business exception
+            throw new RuntimeException(e); // TODO: create business exception
         } finally {
             lock.unlock();
         }
