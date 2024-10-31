@@ -86,7 +86,7 @@
 						<param>src/main/resources/graphqls/probe.graphqls</param>
 						<param>src/main/resources/graphqls/project.graphqls</param>
 					</schemaPaths>
-					<packageName>${project.groupId}.graphqlmusicstoremaven.generated</packageName>
+					<packageName>${project.groupId}.litmusgraphqljava.generated</packageName>
 					<generateClientApiV2>true</generateClientApiV2>
 					<!--generateClientApi>true</generateClientApi-->
 					<generateInterfaces>false</generateInterfaces>

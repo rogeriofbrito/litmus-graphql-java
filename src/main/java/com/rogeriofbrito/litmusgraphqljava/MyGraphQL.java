@@ -1,7 +1,7 @@
 package com.rogeriofbrito.litmusgraphqljava;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.rogeriofbrito.graphqlmusicstoremaven.generated.types.ListExperimentResponse;
+import com.rogeriofbrito.litmusgraphqljava.generated.types.ListExperimentResponse;
 import com.rogeriofbrito.litmusgraphqljava.client.ListExperimentClient;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
